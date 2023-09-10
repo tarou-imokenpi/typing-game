@@ -11,14 +11,14 @@ class typingGame:
     def __read_key(key: str) -> None:
         while True:
             if keyboard.read_key() == key:
-                logger.debug(f"pless {key}")
+                logger.debug(f"plessed {key}")
                 break
 
     @staticmethod
     def __get_KeyWord_input(key_word: str) -> None:
         print(key_word)
         for i in key_word:
-            logger.info(f"wait for {i}")
+            logger.info(f"waiting for {i}")
             typingGame.__read_key(key=i)
 
         logger.debug("key_word OK")
