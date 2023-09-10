@@ -1,5 +1,6 @@
 import keyboard
 import pandas as pd
+from loguru import Logger
 
 
 class typingGame:
@@ -10,17 +11,17 @@ class typingGame:
     def __read_key(key: str) -> None:
         while True:
             if keyboard.read_key() == key:
-                print(f"pless {key}")
+                Logger.info(f"pless {key}")
                 break
 
     @staticmethod
     def __get_KeyWord_input(key_word: str) -> None:
         print(key_word)
         for i in key_word:
-            print(f"wait for {i}")
+            Logger.info(f"wait for {i}")
             typingGame.__read_key(key=i)
 
-        print("debag OK")
+        Logger.debug("key_word OK")
 
     def __get_KeyWord(self, i, datasets_name) -> str:
         key_word: str = self.df.at[i, datasets_name]
@@ -31,9 +32,9 @@ class typingGame:
         for i in range(str_size):
             typingGame.__get_KeyWord_input(self.__get_KeyWord(i, datasets_name))
 
-        print("debag finish")
+        Logger.debug("finish game")
 
 
-mondai = typingGame(path=r"datasets\PG_lang.csv")
+game = typingGame(path=r"datasets\PG_lang.csv")
 
-mondai.start(datasets_name="lang")
+game.start(datasets_name="lang")
