@@ -13,15 +13,15 @@ class App(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
 
-        # ウィンドウタイトルを決定
+        # window title
         self.title("AI-based-question-typing-game")
 
-        # ウィンドウの大きさを決定
+        # window size
         self.geometry("1200x800")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        # ttkボタンのスタイル定義
+        # ttk button style
         style = ttk.Style()
         style.configure("TOP_menu.TButton", font=("Helvetica", 26))
         style.configure("back.TButton", font=("Helvetica", 16))
@@ -98,7 +98,7 @@ class App(Tk):
 
         # --------------------------------------------------------------------------
 
-        # main_frameを一番上に表示
+        # raise main_frame
         self.main_frame.tkraise()
 
     def changePage(self, page):
