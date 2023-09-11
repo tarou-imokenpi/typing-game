@@ -2,46 +2,42 @@ import keyboard
 import pandas as pd
 from loguru import logger
 from concurrent.futures import ThreadPoolExecutor
+import asyncio
 
 
 class typingGame:
     def __init__(self, path: str) -> None:
         self.df = pd.read_csv(path)
 
-    @staticmethod
-    def __read_key(key: str) -> None:
-        while True:
-            if keyboard.read_key() == key:
-                logger.debug(f"plessed {key}")
-                return key
-
-    @staticmethod
-    def __get_KeyWord_input(key_word: str) -> None:
+    async def read_key_async(key_word: str) -> None:
         print(key_word)
-        for i in key_word:
-            logger.info(f"waiting for {i}")
-            typingGame.__read_key(key=i)
+        for key in key_word:
+            logger.info(f"waiting for {key}")
+            while True:
+                event = await asyncio.to_thread(keyboard.read_event)
+
+                if event.event_type == keyboard.KEY_DOWN and event.name == key:
+                    logger.debug(f"pressed {event.name}")
+                    break
 
         logger.debug("key_word OK")
 
-    def __get_KeyWord(self, i, datasets_name) -> str:
+    def get_type_text(self, i, datasets_name) -> str:
         key_word: str = self.df.at[i, datasets_name]
         return key_word
 
-    def start(self, datasets_name: str) -> None:
-        def __run():
-            str_size = self.df.size
-            for i in range(str_size):
-                typingGame.__get_KeyWord_input(self.__get_KeyWord(i, datasets_name))
+    async def start(self, datasets_name: str) -> None:
+        str_size = self.df.size
+        for i in range(str_size):
+            await typingGame.read_key_async(self.get_type_text(i, datasets_name))
 
-        with ThreadPoolExecutor() as executor:
-            executor.submit(__run)
         logger.debug("finish game")
 
 
-def start_game():
+async def start_game():
     game = typingGame(path=r"datasets\PG_lang.csv")
-    game.start(datasets_name="lang")
+
+    await game.start(datasets_name="lang")
 
 
-start_game()
+asyncio.run(start_game())
