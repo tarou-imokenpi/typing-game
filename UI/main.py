@@ -14,7 +14,7 @@ class App(Tk):
         Tk.__init__(self, *args, **kwargs)
 
         # ウィンドウタイトルを決定
-        self.title("Tkinter change page")
+        self.title("AI-based-question-typing-game")
 
         # ウィンドウの大きさを決定
         self.geometry("1200x800")
