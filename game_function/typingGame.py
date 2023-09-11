@@ -1,7 +1,6 @@
 import keyboard
 import pandas as pd
 from loguru import logger
-from concurrent.futures import ThreadPoolExecutor
 import asyncio
 
 
