@@ -1,6 +1,9 @@
+import ctypes
+from concurrent.futures import ThreadPoolExecutor
 from tkinter import *
 from tkinter import ttk
-import ctypes
+
+from typingGame import typingGame
 
 # 高DPIに設定
 try:
@@ -36,6 +39,7 @@ class App(Tk):
         self.single_player_frame.grid(row=0, column=0, sticky="nsew")
         self.multi_player_frame.grid(row=0, column=0, sticky="nsew")
 
+        self.start_flag = False
         # -----------------------------------main_frame-----------------------------
         self.titleLabel = Label(
             self.main_frame,
@@ -73,10 +77,21 @@ class App(Tk):
             change_frame=self.main_frame,
             style="back.TButton",
         )
+        self.typing_text = ttk.Label(
+            self.single_player_frame,
+            text="スタートするには開始を押してください",
+            font=("Helvetica", "26"),
+        )
+        self.typing_start_btn = ttk.Button(
+            self.single_player_frame,
+            text="開始",
+            command=lambda: self.change_flag(True),
+        )
 
         # pack
         self.single_back_btn.pack(anchor="w", padx=(10, 0), pady=(10, 0))
-        self.titleLabel.pack(anchor="center", expand=True)
+        self.typing_text.pack()
+        self.typing_start_btn.pack()
 
         # --------------------------------------------------------------------------
         # ----------------------------multi_player_frame---------------------------
@@ -104,6 +119,9 @@ class App(Tk):
     def changePage(self, page):
         page.tkraise()
 
+    def change_flag(self, flag):
+        self.start_flag = flag
+
     # 共通コンポーネント
     def ttk_btn_change_frame(self, self_frame, text, change_frame, style=None):
         if style:
@@ -120,6 +138,11 @@ class App(Tk):
                 command=lambda: self.changePage(change_frame),
             )
         return btn
+
+    def start_game(self, path, datasets_name):
+        if self.start_flag:
+            game = typingGame(path)
+            game.start(datasets_name)
 
 
 if __name__ == "__main__":

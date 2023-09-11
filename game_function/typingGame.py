@@ -1,6 +1,7 @@
 import keyboard
 import pandas as pd
 from loguru import logger
+from concurrent.futures import ThreadPoolExecutor
 
 
 class typingGame:
@@ -12,7 +13,7 @@ class typingGame:
         while True:
             if keyboard.read_key() == key:
                 logger.debug(f"plessed {key}")
-                break
+                return key
 
     @staticmethod
     def __get_KeyWord_input(key_word: str) -> None:
@@ -28,13 +29,19 @@ class typingGame:
         return key_word
 
     def start(self, datasets_name: str) -> None:
-        str_size = self.df.size
-        for i in range(str_size):
-            typingGame.__get_KeyWord_input(self.__get_KeyWord(i, datasets_name))
+        def __run():
+            str_size = self.df.size
+            for i in range(str_size):
+                typingGame.__get_KeyWord_input(self.__get_KeyWord(i, datasets_name))
 
+        with ThreadPoolExecutor() as executor:
+            executor.submit(__run)
         logger.debug("finish game")
 
 
-game = typingGame(path=r"datasets\PG_lang.csv")
+def start_game():
+    game = typingGame(path=r"datasets\PG_lang.csv")
+    game.start(datasets_name="lang")
 
-game.start(datasets_name="lang")
+
+start_game()
