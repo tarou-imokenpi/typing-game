@@ -8,7 +8,7 @@ class typingGame:
     def __init__(self, path: str) -> None:
         self.df = pd.read_csv(path)
 
-    async def read_key_async(key_word: str) -> None:
+    async def read_key_async(self, key_word: str):
         print(key_word)
         for key in key_word:
             logger.info(f"waiting for {key}")
@@ -21,14 +21,11 @@ class typingGame:
 
         logger.debug("key_word OK")
 
-    def get_type_text(self, i, datasets_name) -> str:
-        key_word: str = self.df.at[i, datasets_name]
-        return key_word
-
     async def start(self, datasets_name: str) -> None:
         str_size = self.df.size
         for i in range(str_size):
-            await typingGame.read_key_async(self.get_type_text(i, datasets_name))
+            key_word: str = self.df.at[i, datasets_name]
+            await self.read_key_async(key_word)
 
         logger.debug("finish game")
 

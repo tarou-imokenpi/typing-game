@@ -2,7 +2,7 @@ import ctypes
 from concurrent.futures import ThreadPoolExecutor
 from tkinter import *
 from tkinter import ttk
-
+import asyncio
 from typingGame import typingGame
 
 # 高DPIに設定
@@ -85,7 +85,7 @@ class App(Tk):
         self.typing_start_btn = ttk.Button(
             self.single_player_frame,
             text="開始",
-            command=lambda: self.change_flag(True),
+            command=asyncio.run(self.async_start_game()),
         )
 
         # pack
@@ -119,9 +119,6 @@ class App(Tk):
     def changePage(self, page):
         page.tkraise()
 
-    def change_flag(self, flag):
-        self.start_flag = flag
-
     # 共通コンポーネント
     def ttk_btn_change_frame(self, self_frame, text, change_frame, style=None):
         if style:
@@ -139,10 +136,11 @@ class App(Tk):
             )
         return btn
 
-    def start_game(self, path, datasets_name):
-        if self.start_flag:
-            game = typingGame(path)
-            game.start(datasets_name)
+    async def async_start_game(
+        self, path=r"datasets\PG_lang.csv", datasets_name="lang"
+    ):
+        game = typingGame(path)
+        await game.start(datasets_name)
 
 
 if __name__ == "__main__":
