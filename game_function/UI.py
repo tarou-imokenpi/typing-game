@@ -1,8 +1,12 @@
+import asyncio
 import ctypes
 from concurrent.futures import ThreadPoolExecutor
 from tkinter import *
 from tkinter import ttk
-import asyncio
+
+import keyboard
+import pandas as pd
+from loguru import logger
 from typingGame import typingGame
 
 # 高DPIに設定
@@ -40,6 +44,7 @@ class App(Tk):
         self.multi_player_frame.grid(row=0, column=0, sticky="nsew")
 
         self.start_flag = False
+        self.typed_key = "0"
         # -----------------------------------main_frame-----------------------------
         self.titleLabel = Label(
             self.main_frame,
@@ -85,7 +90,7 @@ class App(Tk):
         self.typing_start_btn = ttk.Button(
             self.single_player_frame,
             text="開始",
-            command=asyncio.run(self.async_start_game()),
+            command=self.game_start_btn(),
         )
 
         # pack
@@ -112,12 +117,16 @@ class App(Tk):
         self.titleLabel.pack(anchor="center", expand=True)
 
         # --------------------------------------------------------------------------
-
+        self.bind("<KeyPress>", self.key_event)
         # raise main_frame
         self.main_frame.tkraise()
 
     def changePage(self, page):
         page.tkraise()
+
+    def game_start_btn(self):
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            self.future = executor.submit(self.start_question)
 
     # 共通コンポーネント
     def ttk_btn_change_frame(self, self_frame, text, change_frame, style=None):
@@ -136,11 +145,37 @@ class App(Tk):
             )
         return btn
 
-    async def async_start_game(
-        self, path=r"datasets\PG_lang.csv", datasets_name="lang"
-    ):
-        game = typingGame(path)
-        await game.start(datasets_name)
+    # typing game
+
+    # read key
+    def key_event(self, e):
+        typed_key = e.keysym
+        print(typed_key)
+        self.typed_key: str = typed_key
+
+    # create data frame
+    def create_df(self, csv_path: str = None, excel_path: str = None):
+        if csv_path:
+            self.df = pd.read_csv(csv_path)
+        elif excel_path:
+            self.df = pd.read_excel(excel_path)
+
+    # start question
+    def start_question(self, target_row="lang"):
+        print("game start!!")
+        self.create_df(csv_path=r"datasets\PG_lang.csv")
+        data_size = self.df.size
+        for i in range(data_size):
+            key_word: str = self.df.at[i, target_row]
+            print(key_word)
+            self.typing_text["text"] = key_word
+            self.update()
+            for key in key_word:
+                print(f"waiting for {key}")
+                while True:
+                    if key == self.typed_key:
+                        print(key)
+                        break
 
 
 if __name__ == "__main__":
