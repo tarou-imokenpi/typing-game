@@ -35,4 +35,4 @@ async def start_game():
     await game.start(datasets_name="lang")
 
 
-asyncio.run(start_game())
+# asyncio.run(start_game())

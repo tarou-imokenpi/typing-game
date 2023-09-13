@@ -1,13 +1,10 @@
-import asyncio
 import ctypes
-from concurrent.futures import ThreadPoolExecutor
+from threading import Thread
 from tkinter import *
 from tkinter import ttk
-from threading import Thread
-import keyboard
+
 import pandas as pd
 from loguru import logger
-from typingGame import typingGame
 
 # 高DPIに設定
 try:
@@ -85,23 +82,27 @@ class App(Tk):
         )
         self.typing_text = ttk.Label(
             self.single_player_frame,
-            text="スタートするには開始を押してください",
-            font=("Helvetica", "26"),
+            text="スタートするには\n開始を押してください",
+            font=("Helvetica", "40"),
         )
         self.typing_start_btn = ttk.Button(
             self.single_player_frame,
             text="開始",
+            style="TOP_menu.TButton",
         )
 
+        # bind func
         def btn_click(event):
             self.start_flag = True
+            self.typing_start_btn.destroy()
 
+        # bind
         self.typing_start_btn.bind("<Button-1>", btn_click)
 
         # pack
         self.single_back_btn.pack(anchor="w", padx=(10, 0), pady=(10, 0))
         self.typing_text.pack()
-        self.typing_start_btn.pack()
+        self.typing_start_btn.pack(pady=(100, 0))
 
         # --------------------------------------------------------------------------
         # ----------------------------multi_player_frame---------------------------
@@ -179,7 +180,7 @@ class App(Tk):
                             if key == self.typed_key:
                                 print(key)
                                 break
-                print("finish game")
+                self.typing_text["text"] = "ゲーム  クリア !!"
                 self.start_flag = False
 
 
