@@ -3,7 +3,7 @@ import ctypes
 from concurrent.futures import ThreadPoolExecutor
 from tkinter import *
 from tkinter import ttk
-
+from threading import Thread
 import keyboard
 import pandas as pd
 from loguru import logger
@@ -44,6 +44,7 @@ class App(Tk):
         self.multi_player_frame.grid(row=0, column=0, sticky="nsew")
 
         self.start_flag = False
+        self.quit_flag = False
         self.typed_key = "0"
         # -----------------------------------main_frame-----------------------------
         self.titleLabel = Label(
@@ -91,7 +92,12 @@ class App(Tk):
             self.single_player_frame,
             text="開始",
         )
-        self.typing_start_btn.bind("<ButtonPress>", self.game_start_btn())
+
+        def btn_click(event):
+            self.start_flag = True
+
+        self.typing_start_btn.bind("<Button-1>", btn_click)
+
         # pack
         self.single_back_btn.pack(anchor="w", padx=(10, 0), pady=(10, 0))
         self.typing_text.pack()
@@ -120,12 +126,11 @@ class App(Tk):
         # raise main_frame
         self.main_frame.tkraise()
 
+        thread1 = Thread(target=self.start_question, daemon=True)
+        thread1.start()
+
     def changePage(self, page):
         page.tkraise()
-
-    def game_start_btn(self):
-        with ThreadPoolExecutor(max_workers=1) as executor:
-            self.future = executor.submit(self.start_question)
 
     # 共通コンポーネント
     def ttk_btn_change_frame(self, self_frame, text, change_frame, style=None):
@@ -148,9 +153,7 @@ class App(Tk):
 
     # read key
     def key_event(self, e):
-        typed_key = e.keysym
-        print(typed_key)
-        self.typed_key: str = typed_key
+        self.typed_key: str = e.keysym
 
     # create data frame
     def create_df(self, csv_path: str = None, excel_path: str = None):
@@ -161,20 +164,23 @@ class App(Tk):
 
     # start question
     def start_question(self, target_row="lang"):
-        print("game start!!")
-        self.create_df(csv_path=r"datasets\PG_lang.csv")
-        data_size = self.df.size
-        for i in range(data_size):
-            key_word: str = self.df.at[i, target_row]
-            print(key_word)
-            self.typing_text["text"] = key_word
-            self.update()
-            for key in key_word:
-                print(f"waiting for {key}")
-                while True:
-                    if key == self.typed_key:
-                        print(key)
-                        break
+        while not self.quit_flag:
+            if self.start_flag:
+                print("game start!!")
+                self.create_df(csv_path=r"datasets\PG_lang.csv")
+                data_size = self.df.size
+                for i in range(data_size):
+                    key_word: str = self.df.at[i, target_row]
+                    print(key_word)
+                    self.typing_text["text"] = key_word
+                    for key in key_word:
+                        print(f"waiting for {key}")
+                        while True:
+                            if key == self.typed_key:
+                                print(key)
+                                break
+                print("finish game")
+                self.start_flag = False
 
 
 if __name__ == "__main__":
