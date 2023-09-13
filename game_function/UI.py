@@ -90,9 +90,8 @@ class App(Tk):
         self.typing_start_btn = ttk.Button(
             self.single_player_frame,
             text="開始",
-            command=self.game_start_btn(),
         )
-
+        self.typing_start_btn.bind("<ButtonPress>", self.game_start_btn())
         # pack
         self.single_back_btn.pack(anchor="w", padx=(10, 0), pady=(10, 0))
         self.typing_text.pack()

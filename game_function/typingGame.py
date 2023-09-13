@@ -14,7 +14,6 @@ class typingGame:
             logger.info(f"waiting for {key}")
             while True:
                 event = await asyncio.to_thread(keyboard.read_event)
-
                 if event.event_type == keyboard.KEY_DOWN and event.name == key:
                     logger.debug(f"pressed {event.name}")
                     break
