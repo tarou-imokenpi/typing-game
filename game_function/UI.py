@@ -165,8 +165,6 @@ class App(Tk):
             )
         return btn
 
-    # typing game
-
     # read key
     def key_event(self, e):
         self.typed_key: str = e.keysym
@@ -184,8 +182,7 @@ class App(Tk):
             if self.start_flag:
                 print("game start!!")
                 self.create_df(csv_path=r"datasets\PG_lang.csv")
-                data_size = self.df.size
-                for i in range(data_size):
+                for i in range(self.df.size):
                     key_word: str = self.df.at[i, target_row]
                     print(key_word)
                     self.typing_text["text"] = key_word
@@ -193,11 +190,12 @@ class App(Tk):
                     for j, key in enumerate(key_word):
                         self.next_type_text["text"] = key_word[j:]
                         print(f"waiting for {key}")
-                        while True:
+                        while not self.quit_flag:
                             if key == self.typed_key:
                                 self.typed_text["text"] += key
                                 print(key)
                                 break
+
                 self.typing_text["text"] = "ゲーム  クリア !!"
                 self.next_type_text["text"] = ""
                 self.typed_text["text"] = ""
