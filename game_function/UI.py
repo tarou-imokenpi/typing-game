@@ -90,19 +90,32 @@ class App(Tk):
             text="開始",
             style="TOP_menu.TButton",
         )
+        self.typed_text = ttk.Label(
+            self.single_player_frame,
+            font=("Helvetica", "40"),
+            foreground="#547BA8",  # font color
+        )
+        self.next_type_text = ttk.Label(
+            self.single_player_frame,
+            font=("Helvetica", "40"),
+            foreground="#999999",  # font color
+        )
 
         # bind func
         def btn_click(event):
             self.start_flag = True
             self.typing_start_btn.destroy()
+            self.typing_text["font"] = ("Helvetica", "64")
 
         # bind
         self.typing_start_btn.bind("<Button-1>", btn_click)
 
         # pack
         self.single_back_btn.pack(anchor="w", padx=(10, 0), pady=(10, 0))
-        self.typing_text.pack()
-        self.typing_start_btn.pack(pady=(100, 0))
+        self.typing_text.pack(pady=(30, 50))
+        self.typing_start_btn.pack()
+        self.typed_text.pack(side="left", anchor="n", padx=(500, 0))
+        self.next_type_text.pack(side="left", anchor="n")
 
         # --------------------------------------------------------------------------
         # ----------------------------multi_player_frame---------------------------
@@ -123,7 +136,9 @@ class App(Tk):
         self.titleLabel.pack(anchor="center", expand=True)
 
         # --------------------------------------------------------------------------
+
         self.bind("<KeyPress>", self.key_event)
+
         # raise main_frame
         self.main_frame.tkraise()
 
@@ -174,13 +189,18 @@ class App(Tk):
                     key_word: str = self.df.at[i, target_row]
                     print(key_word)
                     self.typing_text["text"] = key_word
-                    for key in key_word:
+                    self.typed_text["text"] = ""
+                    for j, key in enumerate(key_word):
+                        self.next_type_text["text"] = key_word[j:]
                         print(f"waiting for {key}")
                         while True:
                             if key == self.typed_key:
+                                self.typed_text["text"] += key
                                 print(key)
                                 break
                 self.typing_text["text"] = "ゲーム  クリア !!"
+                self.next_type_text["text"] = ""
+                self.typed_text["text"] = ""
                 self.start_flag = False
 
 
