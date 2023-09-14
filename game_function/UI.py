@@ -2,7 +2,6 @@ import ctypes
 from threading import Thread
 from tkinter import *
 from tkinter import ttk
-
 import pandas as pd
 from loguru import logger
 
@@ -32,11 +31,13 @@ class App(Tk):
 
         # create frame
         self.main_frame = Frame()
+        self.select_data_single_frame = Frame()
         self.single_player_frame = Frame()
         self.multi_player_frame = Frame()
 
         # grid setting
         self.main_frame.grid(row=0, column=0, sticky="nsew")
+        self.select_data_single_frame.grid(row=0, column=0, sticky="nsew")
         self.single_player_frame.grid(row=0, column=0, sticky="nsew")
         self.multi_player_frame.grid(row=0, column=0, sticky="nsew")
 
@@ -52,7 +53,7 @@ class App(Tk):
         self.single_changePage = self.ttk_btn_change_frame(
             self_frame=self.main_frame,
             text="シングルプレイで始める",
-            change_frame=self.single_player_frame,
+            change_frame=self.select_data_single_frame,
             style="TOP_menu.TButton",
         )
         self.multi_changePage = self.ttk_btn_change_frame(
@@ -68,12 +69,50 @@ class App(Tk):
         self.multi_changePage.pack(pady=(50, 0), ipadx=166, ipady=10)
 
         # --------------------------------------------------------------------------
-        # ----------------------------single_player_frame---------------------------
-        self.titleLabel = ttk.Label(
-            self.single_player_frame,
-            text="Frame 1",
+        # ----------------------------select_datasets_frame(single)-----------------
+
+        self.select_df_title = ttk.Label(
+            self.select_data_single_frame,
+            text="タイプするテキストを選択してください。",
             font=("Helvetica", "35"),
         )
+        self.ai_text_label = ttk.Label(
+            self.select_data_single_frame,
+            text="テキストボックスに生成したいジャンルや単語を入力してください。",
+        )
+        self.use_default_data_btn = self.ttk_btn_change_frame(
+            self_frame=self.select_data_single_frame,
+            text="事前に用意されたテキストをランダムで出題する",
+            change_frame=self.single_player_frame,
+        )
+        self.use_gpt_btn = self.ttk_btn_change_frame(
+            self_frame=self.select_data_single_frame,
+            text="AIでタイプテキストを生成する",
+            change_frame=self.single_player_frame,
+        )
+        self.use_gpt_text_input = ttk.Entry(self.select_data_single_frame)
+
+        # bind func
+        def use_default_btn_event(event):
+            # datasetsの選択
+            pass
+
+        def use_gpt_btn_event(event):
+            self.gpt_intput_text: str = self.use_gpt_text_input.get()
+            print(self.gpt_intput_text)
+
+        # bind
+        self.use_gpt_btn.bind("<Button-1>", use_gpt_btn_event)
+        self.use_default_data_btn.bind("<Button-1>", use_default_btn_event)
+
+        # pack
+        self.select_df_title.pack()
+        self.use_default_data_btn.pack()
+        self.ai_text_label.pack()
+        self.use_gpt_text_input.pack()
+        self.use_gpt_btn.pack()
+        # --------------------------------------------------------------------------
+        # ----------------------------single_player_frame---------------------------
         self.single_back_btn = self.ttk_btn_change_frame(
             self_frame=self.single_player_frame,
             text="タイトルに戻る",
@@ -150,6 +189,8 @@ class App(Tk):
 
     # 共通コンポーネント
     def ttk_btn_change_frame(self, self_frame, text, change_frame, style=None):
+        self.start_flag = False
+        self.quit_flag = False
         if style:
             btn = ttk.Button(
                 self_frame,
@@ -196,7 +237,7 @@ class App(Tk):
                                 print(key)
                                 break
 
-                self.typing_text["text"] = "ゲーム  クリア !!"
+                self.typing_text["text"] = "スタートするには\n開始を押してください"
                 self.next_type_text["text"] = ""
                 self.typed_text["text"] = ""
                 self.start_flag = False
