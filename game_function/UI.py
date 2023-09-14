@@ -44,6 +44,8 @@ class App(Tk):
         self.start_flag = False
         self.quit_flag = False
         self.typed_key = "0"
+        self.choiced_data = ""
+        self.target_row = ""
         # -----------------------------------main_frame-----------------------------
         self.titleLabel = Label(
             self.main_frame,
@@ -79,37 +81,42 @@ class App(Tk):
         self.ai_text_label = ttk.Label(
             self.select_data_single_frame,
             text="テキストボックスに生成したいジャンルや単語を入力してください。",
+            font=(("Helvetica", "16")),
         )
         self.use_default_data_btn = self.ttk_btn_change_frame(
             self_frame=self.select_data_single_frame,
             text="事前に用意されたテキストをランダムで出題する",
             change_frame=self.single_player_frame,
+            style="back.TButton",
         )
         self.use_gpt_btn = self.ttk_btn_change_frame(
             self_frame=self.select_data_single_frame,
             text="AIでタイプテキストを生成する",
             change_frame=self.single_player_frame,
+            style="back.TButton",
         )
         self.use_gpt_text_input = ttk.Entry(self.select_data_single_frame)
 
         # bind func
         def use_default_btn_event(event):
             # datasetsの選択
-            pass
+            self.choiced_data = "datasets/General Programming Terms.csv"
+            self.target_row = "programming term"
 
         def use_gpt_btn_event(event):
             self.gpt_intput_text: str = self.use_gpt_text_input.get()
             print(self.gpt_intput_text)
+            self.typing_text["text"] = "未対応(( ﾟДﾟ))"
 
         # bind
         self.use_gpt_btn.bind("<Button-1>", use_gpt_btn_event)
         self.use_default_data_btn.bind("<Button-1>", use_default_btn_event)
 
         # pack
-        self.select_df_title.pack()
-        self.use_default_data_btn.pack()
-        self.ai_text_label.pack()
-        self.use_gpt_text_input.pack()
+        self.select_df_title.pack(pady=50)
+        self.use_default_data_btn.pack(pady=(0, 50))
+        self.ai_text_label.pack(pady=(0, 30))
+        self.use_gpt_text_input.pack(pady=(0, 30))
         self.use_gpt_btn.pack()
         # --------------------------------------------------------------------------
         # ----------------------------single_player_frame---------------------------
@@ -160,7 +167,7 @@ class App(Tk):
         # ----------------------------multi_player_frame---------------------------
         self.titleLabel = ttk.Label(
             self.multi_player_frame,
-            text="Frame 1",
+            text="あると思ったら大間違い(^^♪\n残念、まだありません",
             font=("Helvetica", "35"),
         )
         self.multi_back_btn = self.ttk_btn_change_frame(
@@ -218,13 +225,13 @@ class App(Tk):
             self.df = pd.read_excel(excel_path)
 
     # start question
-    def start_question(self, target_row="lang"):
+    def start_question(self):
         while not self.quit_flag:
             if self.start_flag:
                 print("game start!!")
-                self.create_df(csv_path=r"datasets\PG_lang.csv")
+                self.create_df(csv_path=self.choiced_data)
                 for i in range(self.df.size):
-                    key_word: str = self.df.at[i, target_row]
+                    key_word: str = str.lower(self.df.at[i, self.target_row])
                     print(key_word)
                     self.typing_text["text"] = key_word
                     self.typed_text["text"] = ""
