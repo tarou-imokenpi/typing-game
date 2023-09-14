@@ -100,8 +100,10 @@ class App(Tk):
         # bind func
         def use_default_btn_event(event):
             # datasetsの選択
-            self.choiced_data = "datasets/General Programming Terms.csv"
-            self.target_row = "programming term"
+            # self.choiced_data = "datasets/General Programming Terms.csv"
+            # self.target_row = "programming term"
+            self.choiced_data = "datasets/PG_lang.csv"
+            self.target_row = "lang"
 
         def use_gpt_btn_event(event):
             self.gpt_intput_text: str = self.use_gpt_text_input.get()
@@ -231,18 +233,22 @@ class App(Tk):
                 print("game start!!")
                 self.create_df(csv_path=self.choiced_data)
                 for i in range(self.df.size):
-                    key_word: str = str.lower(self.df.at[i, self.target_row])
+                    key_word: str = self.df.at[i, self.target_row]
                     print(key_word)
                     self.typing_text["text"] = key_word
                     self.typed_text["text"] = ""
-                    for j, key in enumerate(key_word):
-                        self.next_type_text["text"] = key_word[j:]
-                        print(f"waiting for {key}")
-                        while not self.quit_flag:
-                            if key == self.typed_key:
-                                self.typed_text["text"] += key
-                                print(key)
-                                break
+
+                    try:  # テキストがnullだったときのエラー処理
+                        for j, key in enumerate(key_word):
+                            self.next_type_text["text"] = key_word[j:]
+                            print(f"waiting for {key}")
+                            while not self.quit_flag:
+                                if key == self.typed_key:
+                                    self.typed_text["text"] += key
+                                    print(key)
+                                    break
+                    except TypeError:
+                        print(f"エラーテキスト[{key_word}]:\n入力する値にエラーがあります。\nこのテキストはパスされました。")
 
                 self.typing_text["text"] = "スタートするには\n開始を押してください"
                 self.next_type_text["text"] = ""
