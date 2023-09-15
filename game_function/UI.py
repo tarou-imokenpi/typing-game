@@ -224,13 +224,17 @@ class App(Tk):
 
     # create data frame
     def create_df(self, file_path: str):
-        extension = file_path.split(".")[1]
-        if extension == "csv":
-            self.df = pd.read_csv(file_path)
-        elif extension == "xlsx":
-            self.df = pd.read_excel(file_path)
-        else:
-            logger.debug("このファイルはデータフレームに変換出来ません。")
+        try:
+            extension = file_path.split(".")[1]
+            if extension == "csv":
+                self.df = pd.read_csv(file_path)
+            elif extension == "xlsx":
+                self.df = pd.read_excel(file_path)
+            else:
+                logger.debug("このファイルはデータフレームに変換出来ません。")
+        except Exception as e:
+            logger.debug("ファイルの読み込みに失敗しました。")
+            logger.debug(e)
 
     # start question
     def start_question(self):
