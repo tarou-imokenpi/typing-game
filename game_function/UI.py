@@ -158,6 +158,7 @@ class App(Tk):
             self.start_flag = True
             self.typing_start_btn.destroy()
             self.typing_text["font"] = ("Helvetica", "64")
+            logger.debug("start button clicked")
 
         # bind
         self.typing_start_btn.bind("<Button-1>", btn_click)
