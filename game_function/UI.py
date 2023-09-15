@@ -8,6 +8,7 @@ from loguru import logger
 # 高DPIに設定
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(True)
+    logger.debug("set high DPI")
 except Exception:
     pass
 
@@ -100,10 +101,13 @@ class App(Tk):
         # bind func
         def use_default_btn_event(event):
             # datasetsの選択
-            # self.choiced_data = "datasets/General Programming Terms.csv"
-            # self.target_row = "programming term"
-            self.choiced_data = "datasets/PG_lang.csv"
-            self.target_row = "lang"
+            self.choiced_data = "datasets/General Programming Terms.csv"
+            self.target_row = "programming term"
+
+            # self.choiced_data = "datasets/PG_lang.csv"
+            # self.target_row = "lang"
+            logger.debug("set choiced_data")
+            logger.debug("set target_row")
 
         def use_gpt_btn_event(event):
             self.gpt_intput_text: str = self.use_gpt_text_input.get()
@@ -184,7 +188,6 @@ class App(Tk):
         self.titleLabel.pack(anchor="center", expand=True)
 
         # --------------------------------------------------------------------------
-
         self.bind("<KeyPress>", self.key_event)
 
         # raise main_frame
@@ -220,18 +223,22 @@ class App(Tk):
         self.typed_key: str = e.keysym
 
     # create data frame
-    def create_df(self, csv_path: str = None, excel_path: str = None):
-        if csv_path:
-            self.df = pd.read_csv(csv_path)
-        elif excel_path:
-            self.df = pd.read_excel(excel_path)
+    def create_df(self, file_path: str):
+        extension = file_path.split(".")[1]
+        if extension == "csv":
+            self.df = pd.read_csv(file_path)
+        elif extension == "xlsx":
+            self.df = pd.read_excel(file_path)
+        else:
+            logger.debug("このファイルはデータフレームに変換出来ません。")
 
     # start question
     def start_question(self):
         while not self.quit_flag:
             if self.start_flag:
                 print("game start!!")
-                self.create_df(csv_path=self.choiced_data)
+
+                self.create_df(file_path=self.choiced_data)
                 for i in range(self.df.size):
                     key_word: str = self.df.at[i, self.target_row]
                     print(key_word)
@@ -248,9 +255,9 @@ class App(Tk):
                                     print(key)
                                     break
                     except TypeError:
-                        print(f"エラーテキスト[{key_word}]:\n入力する値にエラーがあります。\nこのテキストはパスされました。")
+                        print(f"テキストエラー[{key_word}]:\n入力する値にエラーがあります。\nこのテキストはパスされました。")
 
-                self.typing_text["text"] = "スタートするには\n開始を押してください"
+                # self.typing_text["text"] = "スタートするには\n開始を押してください"
                 self.next_type_text["text"] = ""
                 self.typed_text["text"] = ""
                 self.start_flag = False
