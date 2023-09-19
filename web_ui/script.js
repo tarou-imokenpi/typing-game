@@ -5,7 +5,8 @@ var currentIndex = 0; // 現在の文字のインデックス
 
 var typing_text = document.getElementById("typing_text");
 
-typing_text.innerText = targetText[current_text]
+typing_text.innerText = targetText[current_text];
+
 // EventListener
 document.addEventListener("keypress",(event) =>{
     type_key = event.key;
