@@ -1,8 +1,9 @@
 var type_key;
-var targetText  = ["typing","tarou"];
+var targetText  = ["typing","tarou"]; // のちに
 var current_text = 0; // 現在のテキストのインデックス
 var currentIndex = 0; // 現在の文字のインデックス
 
+// HTMLElementの取得
 var type_text = document.getElementById("type_text");
 var typed_text = document.getElementById("typed_text");
 
