@@ -1,18 +1,24 @@
 <!DOCTYPE html>
-<html lang="jp">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./bulma.min.css">
     <title>Document</title>
 </head>
 <body>
-    <div class="typing-game">
-        <h1 id="type_text">no text</h1>
-        <div class="wrapper" style="display: flex;">
-            <h2 id="typed_text"></h2>
-            <h2 id="typing_text"></h2>
+    <div class="container">
+        <button class=" button is-info is-medium" id="game-start-btn" onclick="gameStart()">ゲームスタート</button>
+
+        <div class="typing-game">
+            <h1 id="type_text">no text</h1>
+            <div class="wrapper" style="display: flex;">
+                <h2 id="typed_text"></h2>
+                <h2 id="typing_text"></h2>
+            </div>
         </div>
+
     </div>
 
     
