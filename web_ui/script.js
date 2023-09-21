@@ -16,23 +16,28 @@ document.addEventListener("keypress",(event) =>{
     type_key = event.key;
     
 
-    if (type_key == targetText[current_text][currentIndex] ){
+    if (type_key == targetText[current_text][currentIndex] )
+    {
         typing_text.innerText = typing_text.textContent.slice(1,typing_text.length)
         typed_text.innerHTML = `<span style="background-color: yellow">${typed_text.textContent + type_key}</span>`;
         currentIndex++;
     }
-        if (currentIndex == targetText[current_text].length){
+        if (currentIndex == targetText[current_text].length)
+        {
             currentIndex = 0; 
             current_text++;
             typed_text.innerText = "";
-            if (current_text < targetText.length){
-            type_text.innerText = targetText[current_text];
-            typing_text.innerText = targetText[current_text];
+            
+            if (current_text < targetText.length)
+            {
+                type_text.innerText = targetText[current_text];
+                typing_text.innerText = targetText[current_text];
             }
-            else{
+            else
+            {
                 type_text.innerText = "ゲームクリア！！"
             }
-}
+        }
 });
 
 
