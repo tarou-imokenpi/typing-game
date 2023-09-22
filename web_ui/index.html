@@ -5,23 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./bulma.min.css">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Document</title>
 </head>
 <body>
     <div class="container">
-        <button class=" button is-info is-medium" id="game-start-btn" onclick="gameStart()">ゲームスタート</button>
-
         <div class="typing-game">
             <h1 id="type_text">スタートボタンで開始</h1>
-            <div class="wrapper" style="display: flex;">
+            <div class="wrapper is-flex">
                 <h2 id="typed_text"></h2>
                 <h2 id="typing_text"></h2>
             </div>
         </div>
+        <div class="columns">
+            <button class=" button is-info is-medium column" id="game-start-btn" onclick="gameStart()">ゲームスタート</button>
+        </div>
+
+        <a href="https://github.com/tarou-imokenpi/AI-based-question-typing-game" target="_blank" rel="noopener noreferrer">
+            <button class="button">
+                <span class="icon">
+                <i class="fab fa-github"></i>
+                </span>
+                <span style="font-weight: bold;">GitHub</span>
+            </button>
+        </a>
 
     </div>
-
+    
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.min.js"></script>
     <script src="./script.js"></script>
