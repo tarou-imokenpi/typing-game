@@ -1,8 +1,17 @@
 var type_key;
-var targetText  = ["typing","tarou"]; // のちに
+var targetText;
 var current_text = 0; // 現在のテキストのインデックス
 var currentIndex = 0; // 現在の文字のインデックス
 var gameStart_flag = false;
+
+$.ajax({
+    url: 'PG_lang.csv'
+}).done(function(data, textStatus, jqXHR){
+    targetText = $.csv.toArrays(data);
+    console.log(targetText);
+}).fail(function(jqXHR, textStatus, errorThrown){
+    console.log(errorThrown);
+});
 
 // HTMLElementの取得
 var type_text = document.getElementById("type_text");
@@ -13,24 +22,25 @@ var gameStart_btn = document.getElementById("game-start-btn");
 
 function gameStart() {
     gameStart_flag = true;
+    gameStart_btn.style.visibility = "hidden";
     type_text.innerText = targetText[current_text];
     typing_text.innerText = targetText[current_text];
-    gameStart_btn.style.visibility = "hidden";
-}; 
+};
 
 // EventListener
 document.addEventListener("keypress",(event) =>{
     type_key = event.key;
-    
-    if (gameStart_flag == true){
 
-    if (type_key == targetText[current_text][currentIndex] ){
+    if (gameStart_flag == true){
+        console.log(`text_num:${current_text}`)
+    console.log(`index:${currentIndex}`)
+    if (type_key == targetText[current_text][0][currentIndex] ){
         typing_text.innerText = typing_text.textContent.slice(1,typing_text.length)
         typed_text.innerHTML = `<span style="background-color: yellow">${typed_text.textContent + type_key}</span>`;
         currentIndex++;
     }
-        if (currentIndex == targetText[current_text].length){
-            currentIndex = 0; 
+        if (currentIndex  == targetText[current_text][0].length){
+            currentIndex = 0;
             current_text++;
             typed_text.innerText = "";
 
