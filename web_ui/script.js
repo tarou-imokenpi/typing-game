@@ -31,12 +31,14 @@ function gameStart() {
 // EventListener
 document.addEventListener("keypress",(event) =>{
     type_key = event.key;
-
+    var typing_text_len = typing_text.length
+    var targetText_len= targetText.length
+    
     if (gameStart_flag == true){
         console.log(`text_num:${current_text}`)
     console.log(`index:${currentIndex}`)
     if (type_key == targetText[current_text][0][currentIndex] ){
-        typing_text.innerText = typing_text.textContent.slice(1,typing_text.length)
+        typing_text.innerText = typing_text.textContent.slice(1,typing_text_len)
         typed_text.innerHTML = `<span style="background-color: yellow">${typed_text.textContent + type_key}</span>`;
         currentIndex++;
     }
@@ -45,7 +47,7 @@ document.addEventListener("keypress",(event) =>{
             current_text++;
             typed_text.innerText = "";
 
-            if (current_text < targetText.length){
+            if (current_text < targetText_len){
                 type_text.innerText = targetText[current_text];
                 typing_text.innerText = targetText[current_text];
             }
