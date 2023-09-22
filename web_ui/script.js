@@ -36,7 +36,7 @@ document.addEventListener("keypress",(event) =>{
     console.log(`index:${currentIndex}`)
     if (type_key == targetText[current_text][0][currentIndex] ){
         typing_text.innerText = typing_text.textContent.slice(1,typing_text.length)
-        typed_text.innerHTML = `<span style="background-color: yellow">${typed_text.textContent + type_key}</span>`;
+        typed_text.innerHTML = `<span style="background-color: #99DDFF">${typed_text.textContent + type_key}</span>`;
         currentIndex++;
     }
         if (currentIndex  == targetText[current_text][0].length){
